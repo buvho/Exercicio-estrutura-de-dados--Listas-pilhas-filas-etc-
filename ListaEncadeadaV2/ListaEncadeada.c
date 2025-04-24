@@ -14,8 +14,10 @@ struct lista
     int ordenada, repeticoes;
 };
 
-static LENo* no_criar(int v);
-
+// funcoes auxiliares
+LENo* no_criar(int v);
+int LE_inserir_inicio(LELista* lista, int valor);
+void detectar_e_deletar(LENo *atual, LENo *anterior,int valor,int *achou);
 
 //cria a lista
 LELista* LE_criar(int ordenada,int repeticoes) {
@@ -39,15 +41,6 @@ void LE_destruir(LELista* lista) {
     free(lista);
 }
 
-//insire um elemento no inicio da lista, funcao auxiliar
-int LE_inserir_inicio(LELista* lista, int valor) {
-    LENo *atual = lista->cabeca;
-    LENo *anterior = atual->prox;
-    atual->prox = no_criar(valor);
-    atual->prox->prox = anterior;
-    return 1;
-}
-
 // insere o elemento na lista, dependendo se ela e ordenadaicada e/ou tem repeticoesetições
 int LE_inserir(LELista* lista, int valor) {
     if (!lista->ordenada){
@@ -60,11 +53,11 @@ int LE_inserir(LELista* lista, int valor) {
     LENo *anterior = lista->cabeca;
     if (!lista->repeticoes && lista->ordenada){
         while(atual) {
-            if (atual->valor > valor){
-                break;
-            }
-            else if (atual->valor == valor){
+            if (atual->valor == valor){
                 return 0;
+            }
+            else if (atual->valor > valor){
+                break;
             }
             anterior = atual;
             atual = atual->prox;
@@ -106,42 +99,39 @@ int LE_remover(LELista* lista, int valor) {
         }
         return 0;
     } 
-    else if(lista->repeticoes && lista->ordenada)
-    {
+    else {
         int achou = 0;
-        while(atual) {
-            if (atual->valor > valor){
-                return achou;
+        if(lista->ordenada){
+            while(atual) {
+                if (atual->valor > valor){
+                    return achou;
+                }
+                else if (atual->valor == valor) {
+                    anterior->prox = atual->prox;
+                    free(atual);
+                    atual = anterior->prox;
+                    achou = 1;
+                } else {
+                    anterior = atual;
+                    atual = atual->prox;
+                }
             }
-            else if (atual->valor == valor) {
-                anterior->prox = atual->prox;
-                free(atual);
-                atual = anterior->prox;
-                achou = 1;
-            } else {
-                anterior = atual;
-                atual = atual->prox;
-            }
-        }
-        return achou;
-    } else{
-        int achou = 0;
-        while(atual) {
-            if (atual->valor == valor) {
-                anterior->prox = atual->prox;
-                free(atual);
-                atual = anterior->prox;
-                achou = 1;
-            } else {
-                anterior = atual;
-                atual = atual->prox;
+        } else{
+            while(atual) {
+                if (atual->valor == valor) {
+                    anterior->prox = atual->prox;
+                    free(atual);
+                    atual = anterior->prox;
+                    achou = 1;
+                } else {
+                    anterior = atual;
+                    atual = atual->prox;
+                }
             }
         }
         return achou;
     }
-    
 }
-
 //indica se a lista esta vazia
 int LE_vazia(LELista* lista) {
     if (!lista->cabeca->prox) return 1;
@@ -177,4 +167,13 @@ int LE_contem(LELista *lista, int valor) {
         atual = atual->prox;
     }
     return 0;
+}
+
+//insire um elemento no inicio da lista, funcao auxiliar
+int LE_inserir_inicio(LELista* lista, int valor) {
+    LENo *atual = lista->cabeca;
+    LENo *anterior = atual->prox;
+    atual->prox = no_criar(valor);
+    atual->prox->prox = anterior;
+    return 1;
 }
