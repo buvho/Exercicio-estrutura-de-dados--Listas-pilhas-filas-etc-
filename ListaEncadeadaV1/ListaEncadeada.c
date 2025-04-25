@@ -11,7 +11,6 @@ struct no
 struct lista
 {
     LENo* cabeca;
-    int classif, rep;
 };
 
 static LENo* no_criar(int v);
@@ -19,7 +18,7 @@ static LENo* no_criar(int v);
 LELista* LE_criar() {
     LELista *lista = (LELista*) malloc(sizeof(LELista));
     if (!lista) return NULL;
-    lista->cabeca = _LE_no_criar(0);
+    lista->cabeca = no_criar(0);
     if (!lista->cabeca) return NULL;
     return lista;
 }

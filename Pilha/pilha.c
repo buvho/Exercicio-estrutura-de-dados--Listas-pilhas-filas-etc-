@@ -29,6 +29,6 @@ int PI_empilhar(tPilha* pilha, int valor) {
 
 int PI_desempilhar(tPilha* pilha) {
     if (pilha->topo == -1) return 0;
-    pilha->topo--;
     return pilha->valor[pilha->topo];
+    pilha->topo--;
 }

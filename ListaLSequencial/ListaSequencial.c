@@ -88,6 +88,7 @@ int LS_remover(LSLista* lista, int valor) {
             }
         }
         excluir_em_index(lista,index,quantos);
+        return 1;
     }
 }
 
